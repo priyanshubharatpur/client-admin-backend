@@ -424,7 +424,7 @@ router.post("/send-otp/:email", (req, res) => {
   const otp = generateOTP();
   otpStorage[email] = otp;
   const mailOptions = {
-    from: "piyushclientapp@gmail.com",
+    from: "DAGSUN",
     to: email,
     subject: "OTP Verification",
     text: `OTP for your verification is: ${otp}`,
