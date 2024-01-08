@@ -1,5 +1,4 @@
 const express = require("express");
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const mongoose = require("mongoose");
 const mediaRouter = require("./routes/media");
 const userRouter = require("./routes/user");
@@ -40,15 +39,9 @@ const createAdmin = () => {
 // Uncomment the line below to create the admin user
 // createAdmin();
 
-app.use(cors());
-
-// Proxy middleware for handling CORS
-app.use('/api', createProxyMiddleware({
-  target: mongoDBAtlasURI,
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api': '', // Remove the '/api' prefix when forwarding the request
-  },
+// Enable CORS middleware with origin option
+app.use(cors({
+  origin: "http://localhost:3000", // Replace with the actual origin of your React app
 }));
 
 app.use(express.json());
