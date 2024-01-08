@@ -42,10 +42,10 @@ const createAdmin = () => {
 app.use(cors());
 
 app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.send();
+  res.status(204).send();
 });
 
 app.use(express.json());
