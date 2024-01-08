@@ -32,7 +32,7 @@ jobs:
 
             # Check if the pull was successful
             if [ $? -eq 0 ]; then
-            sudo npi install
+            sudo npm install
        
             sudo pm2 restart "$pm2_process"
             echo "Git pull successful, and PM2 process restarted."
@@ -42,4 +42,4 @@ jobs:
           EOF
 
           scp -o StrictHostKeyChecking=no -i private.pem deploy_script.sh ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP}:~/deploy_script.sh
-          ssh -o StrictHostKeyChecking=no -i private.pem ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP} 'chmod +x ~/deploy_script.sh && ~/deploy_script.sh'
+          ssh -o StrictHostKeyChecking=no -i private.pem ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_IP} 'chmod +x ~/deploy_script.sh && sudo sh ~/deploy_script.sh'
