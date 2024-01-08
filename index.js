@@ -40,6 +40,14 @@ const createAdmin = () => {
 // createAdmin();
 
 app.use(cors());
+
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.send();
+});
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/media", mediaRouter);
