@@ -39,7 +39,7 @@ const createAdmin = () => {
 
 // createAdmin();
 
-// app.use(cors());
+app.use(cors());
 // app.options("*", (req, res) => {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
 //   res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
@@ -47,17 +47,17 @@ const createAdmin = () => {
 //   res.status(204).send();
 // });
 
-const allowedOrigins = ['http://localhost:3000'];
+// const allowedOrigins = ['http://localhost:3000'];
 
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
+// app.use(cors({
+//   origin: function(origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   }
+// }));
 
 
 app.use(express.json());
