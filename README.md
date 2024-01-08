@@ -1,4 +1,4 @@
 steps to run-
 
-npm install
+npm install  
 node index.js
