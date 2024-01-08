@@ -84,7 +84,7 @@ router.get("/:date", async (req, res) => {
     const date = new Date(req.params.date);
     const formattedDate = date.toISOString().split("T")[0];
     const media = await Media.find({ date: formattedDate });
-    res.json({ success: true, media });
+    res.json({ success: true, message: "successful", media });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
