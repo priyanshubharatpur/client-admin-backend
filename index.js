@@ -1,4 +1,5 @@
 const express = require("express");
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const mongoose = require("mongoose");
 const mediaRouter = require("./routes/media");
 const userRouter = require("./routes/user");
@@ -9,14 +10,13 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// mongoose.connect("mongodb://localhost/imageVideoDB", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
+// MongoDB Atlas connection string
+const mongoDBAtlasURI = "mongodb+srv://piyushclientapp:U0wOilM33jOOeZkS@cluster0.m0bvivm.mongodb.net/?retryWrites=true&w=majority";
 
-mongoose.connect(
-  "mongodb+srv://piyushclientapp:U0wOilM33jOOeZkS@cluster0.m0bvivm.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect(mongoDBAtlasURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const createAdmin = () => {
   const admin = new Admin({
@@ -37,28 +37,19 @@ const createAdmin = () => {
     });
 };
 
+// Uncomment the line below to create the admin user
 // createAdmin();
 
 app.use(cors());
-// app.options("*", (req, res) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   res.status(204).send();
-// });
 
-// const allowedOrigins = ['http://localhost:3000'];
-
-// app.use(cors({
-//   origin: function(origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
-
+// Proxy middleware for handling CORS
+app.use('/api', createProxyMiddleware({
+  target: mongoDBAtlasURI,
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api': '', // Remove the '/api' prefix when forwarding the request
+  },
+}));
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
