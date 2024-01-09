@@ -40,7 +40,7 @@ const createAdmin = () => {
 // createAdmin();
 
 // Enable CORS middleware with origin option
-app.use(cors());
+// app.use(cors());
 
 const corsOptions = {
   origin: "http://localhost:3000", // Replace with the actual origin of your React app
