@@ -42,9 +42,14 @@ const createAdmin = () => {
 // Enable CORS middleware with origin option
 app.use(cors());
 
-// app.use(cors({
-//   origin: "http://localhost:3000", // Replace with the actual origin of your React app
-// }));
+const corsOptions = {
+  origin: "http://localhost:3000", // Replace with the actual origin of your React app
+  methods: 'OPTIONS, POST, GET, PUT, DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+};
+
+// Enable OPTIONS preflight request
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
