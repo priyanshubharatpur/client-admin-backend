@@ -9,7 +9,6 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MongoDB Atlas connection string
 const mongoDBAtlasURI = "mongodb+srv://piyushclientapp:U0wOilM33jOOeZkS@cluster0.m0bvivm.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose.connect(mongoDBAtlasURI, {
