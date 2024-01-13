@@ -261,6 +261,91 @@ const addFrameToImage = async (
 //   });
 // };
 
+// const addFrameToVideo = async (
+//   originalVideoPath,
+//   frameImagePath,
+//   outputVideoPath,
+//   filename,
+//   res,
+//   phone
+// ) => {
+//   const ffprobe = require("ffprobe");
+//   const ffprobePath = require("ffprobe-static").path;
+
+//   const localPath = `uploads/${filename}`;
+//   const localPathDir = path.dirname(localPath);
+//   await fs.promises.mkdir(localPathDir, { recursive: true });
+//   const localFilePath = path.resolve(__dirname, "..", localPath);
+//   await downloadFile(originalVideoPath, localFilePath);
+//   //downloading frame
+//   const localFramePath = `uploads/${phone}/${filename}`;
+//   const localFramePathDir = path.dirname(localFramePath);
+//   await fs.promises.mkdir(localFramePathDir, { recursive: true });
+//   const localFrameFilePath = path.resolve(__dirname, "..", localFramePath);
+//   await downloadFile(frameImagePath, localFrameFilePath);
+
+//   ffprobe(localFilePath, { path: ffprobePath }, (err, info) => {
+//     if (err) {
+//       console.error("Error getting video dimensions:", err);
+//       return;
+//     }
+
+//     const outputDirectory = path.dirname(outputVideoPath);
+
+//     fs.mkdirSync(outputDirectory, { recursive: true });
+
+//     ffmpeg()
+//       .input(localFilePath)
+//       .input(localFrameFilePath)
+//       .complexFilter({
+//         filter: "overlay",
+//         options: {
+//           x: "W-w-10",
+//           y: "H-h-10",
+//         },
+//       })
+//       .output(outputVideoPath)
+//       .on("end", async () => {
+//         const cloudinaryOptions = {
+//           public_id: filename,
+//           folder: `media/${phone}/saved`,
+//           resource_type: "video",
+//         };
+
+//         let upload_result;
+//         try {
+//           upload_result = await cloudinary.uploader.upload(
+//             outputVideoPath,
+//             cloudinaryOptions
+//           );
+//         } catch (uploadError) {
+//           console.error("Error uploading to Cloudinary:", uploadError);
+//           return res.status(500).json({
+//             success: false,
+//             error: "Error uploading to Cloudinary.",
+//           });
+//         }
+
+//         // const deleteVideoPath = path.join(
+//         //   __dirname,
+//         //   `../uploads/${phone}/saved`,
+//         //   filename
+//         // );
+//         // fs.unlinkSync(deleteVideoPath);
+
+//         return res.status(200).json({
+//           success: true,
+//           message: "Frame added successfully to video.",
+//           fileUrl: upload_result.secure_url,
+//         });
+//       })
+//       .on("error", (err) => {
+//         console.error("Error:", err);
+//       })
+//       .run();
+//   });
+// };
+
 const addFrameToVideo = async (
   originalVideoPath,
   frameImagePath,
@@ -289,58 +374,67 @@ const addFrameToVideo = async (
       console.error("Error getting video dimensions:", err);
       return;
     }
-
+    const videoWidth = info.streams[0].width;
+    const videoHeight = info.streams[0].height;
     const outputDirectory = path.dirname(outputVideoPath);
 
     fs.mkdirSync(outputDirectory, { recursive: true });
 
     ffmpeg()
-      .input(localFilePath)
       .input(localFrameFilePath)
-      .complexFilter({
-        filter: "overlay",
-        options: {
-          x: "W-w-10",
-          y: "H-h-10",
-        },
-      })
-      .output(outputVideoPath)
-      .on("end", async () => {
-        const cloudinaryOptions = {
-          public_id: filename,
-          folder: `media/${phone}/saved`,
-          resource_type: "video",
-        };
+      .videoFilters(`scale=${videoWidth}:${videoHeight}`)
+      .output("resizedFrame.png")
+      .on("end", () => {
+        ffmpeg()
+          .input(localFilePath)
+          .input("resizedFrame.png")
+          .complexFilter({
+            filter: "overlay",
+            options: {
+              x: "W-w-10",
+              y: "H-h-10",
+            },
+          })
+          .output(outputVideoPath)
+          .on("end", async () => {
+            const cloudinaryOptions = {
+              public_id: filename,
+              folder: `media/${phone}/saved`,
+              resource_type: "video",
+            };
+            let upload_result;
+            try {
+              upload_result = await cloudinary.uploader.upload(
+                outputVideoPath,
+                cloudinaryOptions
+              );
+            } catch (uploadError) {
+              console.error("Error uploading to Cloudinary:", uploadError);
+              return res.status(500).json({
+                success: false,
+                error: "Error uploading to Cloudinary.",
+              });
+            }
 
-        let upload_result;
-        try {
-          upload_result = await cloudinary.uploader.upload(
-            outputVideoPath,
-            cloudinaryOptions
-          );
-        } catch (uploadError) {
-          console.error("Error uploading to Cloudinary:", uploadError);
-          return res.status(500).json({
-            success: false,
-            error: "Error uploading to Cloudinary.",
-          });
-        }
-
-        // const deleteVideoPath = path.join(
-        //   __dirname,
-        //   `../uploads/${phone}/saved`,
-        //   filename
-        // );
-        // fs.unlinkSync(deleteVideoPath);
-
-        return res.status(200).json({
-          success: true,
-          message: "Frame added successfully to video.",
-          fileUrl: upload_result.secure_url,
-        });
+            const deleteVideoPath = path.join(
+              __dirname,
+              `../uploads/${phone}/saved`,
+              filename
+            );
+            fs.unlinkSync(deleteVideoPath);
+            return res.status(200).json({
+              success: true,
+              message: "Frame added successfully to video.",
+              fileUrl: upload_result.secure_url,
+            });
+          })
+          .on("error", (err) => {
+            console.error("Error:", err);
+          })
+          .run();
       })
       .on("error", (err) => {
-        console.error("Error:", err);
+        console.error("Error resizing frame:", err);
       })
       .run();
   });
