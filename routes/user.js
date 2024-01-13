@@ -181,8 +181,8 @@ const addFrameToVideo = async (
                 outputVideoPath,
                 cloudinaryOptions
               );
-              const deleteFile1Path = path.join(__dirname, `../uploads/${phone}/saved`, filename);
-              fs.unlinkSync(deleteFile1Path);
+              fs.unlinkSync(localFilePath);
+              fs.unlinkSync(localFrameFilePath);
             } catch (uploadError) {
               console.error("Error uploading to Cloudinary:", uploadError);
               return res.status(500).json({
