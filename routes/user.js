@@ -165,9 +165,6 @@ const addFrameToVideo = async (
           .videoCodec('libx264')
           .audioCodec('aac')
           .outputFormat('mp4')
-          .on("progress", (progress) => {
-            console.log("Processing: " + progress.percent + "% done");
-          })
           .on("error", (err) => {
             console.error("FFmpeg Error:", err);
             res.status(500).json({
