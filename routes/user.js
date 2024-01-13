@@ -326,12 +326,12 @@ const addFrameToVideo = async (
           });
         }
 
-        const deleteVideoPath = path.join(
-          __dirname,
-          `../uploads/${phone}/saved`,
-          filename
-        );
-        fs.unlinkSync(deleteVideoPath);
+        // const deleteVideoPath = path.join(
+        //   __dirname,
+        //   `../uploads/${phone}/saved`,
+        //   filename
+        // );
+        // fs.unlinkSync(deleteVideoPath);
 
         return res.status(200).json({
           success: true,
