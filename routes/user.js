@@ -93,6 +93,12 @@ const addFrameToImage = async (
       filename
     );
     fs.unlinkSync(deleteFile2Path);
+    const deleteFile3Path = path.join(
+      __dirname,
+      `../uploads/`,
+      filename
+    );
+    fs.unlinkSync(deleteFile3Path);
     // const deleteFile3Path = path.join(__dirname, `../resizedFrame.png`);
     // fs.unlinkSync(deleteFile3Path);
 
