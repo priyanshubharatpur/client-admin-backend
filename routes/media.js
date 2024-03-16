@@ -10,10 +10,16 @@ const cloudinary = require("cloudinary").v2;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-cloudinary.config({
+/*cloudinary.config({
   cloud_name: "de4hxwxko",
   api_key: "276658948336775",
   api_secret: "fW2jODyryImPXLB7vsaPlWRSD_Y",
+});*/
+
+cloudinary.config({
+  cloud_name: "djuty9y1y",
+  api_key: "654661756552156",
+  api_secret: "kdhIDgqRd_KFBoEGspjl1XPdILw",
 });
 
 router.post("/upload", upload.single("mediaFile"), async (req, res) => {

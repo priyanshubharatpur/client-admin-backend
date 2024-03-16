@@ -9,7 +9,8 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const mongoDBAtlasURI = "mongodb+srv://piyushclientapp:U0wOilM33jOOeZkS@cluster0.m0bvivm.mongodb.net/?retryWrites=true&w=majority";
+//const mongoDBAtlasURI = "mongodb+srv://piyushclientapp:U0wOilM33jOOeZkS@cluster0.m0bvivm.mongodb.net/?retryWrites=true&w=majority";
+const mongoDBAtlasURI = "mongodb+srv://dbuser:25WI8S2T0sEV1j3la0C2FD3BpeW96jcc@maincluster.phd10ty.mongodb.net/?retryWrites=true&w=majority&appName=maincluster";
 
 mongoose.connect(mongoDBAtlasURI, {
   useNewUrlParser: true,
