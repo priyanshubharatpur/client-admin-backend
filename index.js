@@ -57,6 +57,10 @@ app.use("/media", mediaRouter);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 
+app.get("/ping", (req, res)=> {
+  res.status(200).send("pong");
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
